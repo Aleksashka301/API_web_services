@@ -1,17 +1,19 @@
 import requests
 
 
-def get_weather(*args):
+if __name__ == '__main__':
+    headers = {'Accept-Language': 'ru-RU'}
+    params = {'MqT&lang=ru': ''}
+    cities = [
+        'london',
+        'SVO',
+        'Череповец',
+    ]
     weather_cities = ''
-    for location in args:
-        url = f'https://wttr.in/{location}?M?nTqu&lang=ru'
-        response = requests.get(url)
+
+    for city in cities:
+        response = requests.get(f'https://wttr.in/{city}', params=params, headers=headers)
         response.raise_for_status()
         weather_cities += response.text
 
-    return weather_cities
-
-
-if __name__ == '__main__':
-    print(get_weather('london', 'SVO', 'Череповец'))
-
+    print(weather_cities)
