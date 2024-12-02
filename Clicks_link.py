@@ -41,7 +41,7 @@ def count_clicks(token, link):
     return response.json()['response']['stats'][0]['views']
 
 
-if __name__ == '__main__':
+def main():
     load_dotenv(find_dotenv())
     token = os.environ['VK_ACCESS_TOKEN']
     user_url = input('Введите ссылку: ')
@@ -53,6 +53,10 @@ if __name__ == '__main__':
             print('Переходов по данной ссылке ещё не было!')
     else:
         print('Сокращенная ссылка: ', shorten_link(token, user_url))
+
+
+if __name__ == '__main__':
+    main()
 
 
 
