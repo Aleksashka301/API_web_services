@@ -1,11 +1,19 @@
 import requests
 import os
 from dotenv import load_dotenv, find_dotenv
-from urllib.parse import urlparse
 
 
-def is_shorten_link(url):
-    return len(urlparse(url)[2]) == 7
+def is_shorten_link(token, url):
+    params = {
+        'access_token': token,
+        'url': url,
+        'private': '0',
+        'v': 5.199,
+    }
+
+    response = requests.get('https://api.vk.ru/method/utils.getShortLink', params=params)
+    response.raise_for_status()
+    return 'error' in response.json().keys()
 
 
 def shorten_link(token, url):
@@ -35,19 +43,16 @@ def count_clicks(token, link):
 
 if __name__ == '__main__':
     load_dotenv(find_dotenv())
-    token = os.getenv('VK_ACCESS_TOKEN')
+    token = os.environ['VK_ACCESS_TOKEN']
     user_url = input('Введите ссылку: ')
 
-    if is_shorten_link(user_url):
+    if is_shorten_link(token, user_url):
         try:
             print('Количество кликов: ', count_clicks(token, user_url))
         except IndexError:
             print('Переходов по данной ссылке ещё не было!')
     else:
-        try:
-            print('Сокращенная ссылка: ', shorten_link(token, user_url))
-        except requests.exceptions.HTTPError:
-            print('Возникла ошибка')
+        print('Сокращенная ссылка: ', shorten_link(token, user_url))
 
 
 
